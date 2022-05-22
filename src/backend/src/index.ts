@@ -88,6 +88,18 @@ app.put('/publish/:id', async (req, res) => {
   res.json(post)
 })
 
+app.post(`/login`, async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      ...req.body
+    },
+    select: {
+      email: true
+    }
+  })
+  res.json(user)
+})
+
 app.post(`/user`, async (req, res) => {
   const result = await prisma.user.create({
     data: {
