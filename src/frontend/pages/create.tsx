@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import Router from 'next/router'
 import PrivateRoute from '../components/PrivateRoute'
+import { useAuthContext } from '../services/auth'
 
 const Draft: React.FC = () => {
+  const { user: authorEmail } = useAuthContext();
+
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [authorEmail, setAuthorEmail] = useState('')
 
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -38,12 +40,6 @@ const Draft: React.FC = () => {
               type="text"
               value={title}
               />
-            <input
-              onChange={e => setAuthorEmail(e.target.value)}
-              placeholder="Author (email address)"
-              type="text"
-              value={authorEmail}
-              />
             <textarea
               cols={50}
               onChange={e => setContent(e.target.value)}
@@ -52,7 +48,7 @@ const Draft: React.FC = () => {
               value={content}
               />
             <input
-              disabled={!content || !title || !authorEmail}
+              disabled={!content || !title}
               type="submit"
               value="Create"
               />
