@@ -1,11 +1,14 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useAuthContext } from '../services/auth'
 
 const Header: React.FC = () => {
   const router = useRouter()
   const isActive: (pathname: string) => boolean =
     pathname => router.pathname === pathname
+
+  const { user } = useAuthContext()
 
   return(
     <nav>
@@ -23,9 +26,16 @@ const Header: React.FC = () => {
         <Link href="/signup">
           <a data-active={isActive('/signup')}>Signup</a>
         </Link>
-        <Link href="/create">
-          <a data-active={isActive('/create')}>+ Create draft</a>
-        </Link>
+        {user ? (
+            <Link href="/create">
+              <a data-active={isActive('/create')}>+ Create draft</a>
+            </Link>
+          ) : ( 
+            <Link href="/login">
+              <a data-active={isActive('/login')}>Login</a>
+            </Link>
+          )
+        }
       </div>
       <style jsx>{`
         nav {
