@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
 import express from 'express'
+import asyncErrorHandler from './errorHandler'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -8,23 +9,23 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.get('/drafts', async (req, res) => {
+app.get('/drafts', asyncErrorHandler( async (req, res) => {
   const posts = await prisma.post.findMany({
     where: { published: false },
     include: { author: true }
   })
   res.json(posts)
-})
+}))
 
-app.get('/feed', async (req, res) => {
+app.get('/feed', asyncErrorHandler( async (req, res) => {
   const posts = await prisma.post.findMany({
     where: { published: true },
     include: { author: true }
   })
   res.json(posts)
-})
+}))
 
-app.get('/filterPosts', async (req, res) => {
+app.get('/filterPosts', asyncErrorHandler( async (req, res) => {
   const { searchString }: { searchString?: string } = req.query;
   const filteredPosts = await prisma.post.findMany({
     where: {
@@ -43,22 +44,22 @@ app.get('/filterPosts', async (req, res) => {
     },
   })
   res.json(filteredPosts)
-})
+}))
 
-app.post(`/post`, async (req, res) => {
-  const { title, content, authorEmail } = req.body
-  const result = await prisma.post.create({
-    data: {
-      title,
-      content,
-      published: false,
-      author: { connect: { email: authorEmail } },
-    },
-  })
-  res.json(result)
-})
+app.post(`/post`, asyncErrorHandler( async (req, res) => {
+    const { title, content, authorEmail } = req.body
+    const result = await prisma.post.create({
+      data: {
+        title,
+        content,
+        published: false,
+        author: { connect: { email: authorEmail } },
+      },
+    })
+    res.json(result)
+}))
 
-app.delete(`/post/:id`, async (req, res) => {
+app.delete(`/post/:id`, asyncErrorHandler( async (req, res) => {
   const { id } = req.params
   const post = await prisma.post.delete({
     where: {
@@ -66,9 +67,9 @@ app.delete(`/post/:id`, async (req, res) => {
     },
   })
   res.json(post)
-})
+}))
 
-app.get(`/post/:id`, async (req, res) => {
+app.get(`/post/:id`, asyncErrorHandler( async (req, res) => {
   const { id } = req.params
   const post = await prisma.post.findUnique({
     where: {
@@ -77,18 +78,18 @@ app.get(`/post/:id`, async (req, res) => {
     include: { author: true }
   })
   res.json(post)
-})
+}))
 
-app.put('/publish/:id', async (req, res) => {
+app.put('/publish/:id', asyncErrorHandler( async (req, res) => {
   const { id } = req.params
   const post = await prisma.post.update({
     where: { id: Number(id) },
     data: { published: true },
   })
   res.json(post)
-})
+}))
 
-app.post(`/login`, async (req, res) => {
+app.post(`/login`, asyncErrorHandler( async (req, res) => {
   const user = await prisma.user.findUnique({
     where: {
       ...req.body
@@ -98,16 +99,16 @@ app.post(`/login`, async (req, res) => {
     }
   })
   res.json(user)
-})
+}))
 
-app.post(`/user`, async (req, res) => {
+app.post(`/user`, asyncErrorHandler( async (req, res) => {
   const result = await prisma.user.create({
     data: {
       ...req.body,
     },
   })
   res.json(result)
-})
+}))
 
 const server = app.listen(3001, () =>
   console.log(
