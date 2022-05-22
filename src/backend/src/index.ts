@@ -69,6 +69,29 @@ app.delete(`/post/:id`, asyncErrorHandler( async (req, res) => {
   res.json(post)
 }))
 
+app.post(`/comment`, asyncErrorHandler( async (req, res) => {
+  const { postId, authorEmail, content } = req.body
+  const comment = await prisma.comment.create({
+    data: {
+      content,
+      post: {connect: {id: postId}},
+      author: {connect: {email: authorEmail}},
+    }
+  })
+  res.json(comment)
+}))
+
+app.get(`/comments/:postId`, asyncErrorHandler( async (req, res) => {
+  const { postId } = req.params
+  const comments = await prisma.comment.findMany({
+    where: { 
+      postId: Number(postId) 
+    },
+    include: { author: true }
+  })
+  res.json(comments)
+}))
+
 app.get(`/post/:id`, asyncErrorHandler( async (req, res) => {
   const { id } = req.params
   const post = await prisma.post.findUnique({
