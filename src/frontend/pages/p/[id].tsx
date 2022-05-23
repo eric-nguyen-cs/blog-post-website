@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import Layout from '../../components/Layout'
 import Router from 'next/router'
 import { PostProps } from '../../components/Post'
+import CommentList from '../../components/CommentList'
 
 async function publish(id: number): Promise<void> {
   await fetch(`http://localhost:3001/publish/${id}`, {
@@ -40,6 +41,7 @@ const Post: React.FC<PostProps> = props => {
           Delete
         </button>
       </div>
+      {props.published && <CommentList postId={props.id}/>}
       <style jsx>{`
         .page {
           background: white;
