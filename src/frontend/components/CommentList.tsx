@@ -26,10 +26,17 @@ const CommentList: React.FC<CommentListProps> = (props) => {
   return (
     <>
       <h3>Comments</h3>
-      {comments.map((comment, index) => (
-        <Comment key={index} comment={comment}/>
-      ))}
+      <div className="comments-content">
+        {comments.map((comment, index) => (
+          <Comment key={index} comment={comment}/>
+          ))}
+      </div>
       <AddComment postId={props.postId} fetchComments={fetchComments}/>
+      <style jsx>{`
+        .comments-content {
+          margin: 0.5rem 1.5rem 0.5rem 0.5rem;
+        }
+      `}</style>
     </>
   )
 }

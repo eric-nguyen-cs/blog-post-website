@@ -31,13 +31,39 @@ const AddComment: React.FC<Props> = (props) => {
   return(
     <>
       {authorEmail ? (
-          <div>
+          <div className="add-comment-box">
             <textarea 
-              placeholder="Add comment"
+              placeholder="Add comment.."
               onChange={(e)=>setContent(e.target.value)}
               value={content}
               />
             <button type="submit" onClick={submitComment}>Send</button>
+            <style jsx>{`
+              .add-comment-box {
+                display: flex;
+                background: #fff; 
+                margin: 2.5rem 0.5rem 0 1.5rem;
+                padding: 5px;
+                border-radius: 10px; 
+                border:1px solid #ccc;
+              }
+
+              textarea {
+                flex-grow: 1;
+                background: none;
+                border: none;
+                outline: none!important;
+                resize: none; 
+                font-family: inherit;
+              }
+
+              button {
+                color: dodgerblue;
+                border: none;
+                background: none;
+                text-transform: uppercase;  
+              }
+            `}</style>
           </div>
         ): (
           <div>
