@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuthContext } from "../services/auth";
+import TypingIndicator from "./TypingIndicator";
 
 interface Props {
   postId: number,
@@ -31,40 +32,47 @@ const AddComment: React.FC<Props> = (props) => {
   return(
     <>
       {authorEmail ? (
-          <div className="add-comment-box">
-            <textarea 
-              placeholder="Add comment.."
-              onChange={(e)=>setContent(e.target.value)}
-              value={content}
-              />
-            <button type="submit" onClick={submitComment}>Send</button>
-            <style jsx>{`
-              .add-comment-box {
-                display: flex;
-                background: #fff; 
-                margin: 2.5rem 0.5rem 0 1.5rem;
-                padding: 5px;
-                border-radius: 10px; 
-                border:1px solid #ccc;
-              }
+            <div className="add-comment-container">
+              <TypingIndicator myMessage={content} postId={props.postId}/>
+              <div className="add-comment-field">
+                <textarea 
+                  placeholder="Add comment.."
+                  onChange={(e)=>setContent(e.target.value)}
+                  value={content}
+                  />
+                <button type="submit" onClick={submitComment}>Send</button>
+                <style jsx>{`
+                  .add-comment-container {
+                    margin: 2.5rem 0.5rem 0 1.5rem;
+                  }
 
-              textarea {
-                flex-grow: 1;
-                background: none;
-                border: none;
-                outline: none!important;
-                resize: none; 
-                font-family: inherit;
-              }
-
-              button {
-                color: dodgerblue;
-                border: none;
-                background: none;
-                text-transform: uppercase;  
-              }
-            `}</style>
-          </div>
+                  .add-comment-field {
+                    display: flex;
+                    background: #fff; 
+                    margin: 0.2rem 0;
+                    padding: 5px;
+                    border-radius: 10px; 
+                    border:1px solid #ccc;
+                  }
+                  
+                  textarea {
+                    flex-grow: 1;
+                    background: none;
+                    border: none;
+                    outline: none!important;
+                    resize: none; 
+                    font-family: inherit;
+                  }
+                  
+                  button {
+                    color: dodgerblue;
+                    border: none;
+                    background: none;
+                    text-transform: uppercase;  
+                  }
+                  `}</style>
+              </div>
+            </div>
         ): (
           <div>
             <small>
