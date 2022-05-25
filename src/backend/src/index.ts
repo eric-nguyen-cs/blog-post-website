@@ -1,10 +1,16 @@
 import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
 import express from 'express'
+import { createServer } from "http"
+import { Server } from "socket.io"
 import asyncErrorHandler from './errorHandler'
 
 const prisma = new PrismaClient()
 const app = express()
+const httpServer = createServer(app)
+const io = new Server(httpServer, { 
+  cors: { origin: '*'}
+})
 
 app.use(express.json())
 app.use(cors())
@@ -133,8 +139,29 @@ app.post(`/user`, asyncErrorHandler( async (req, res) => {
   res.json(result)
 }))
 
-const server = app.listen(3001, () =>
+httpServer.listen(3001, () =>
   console.log(
     '🚀 Server ready at: http://localhost:3001',
   ),
 )
+
+io.on('connection', (socket) => {
+  socket.on('join-post', postId => {
+    socket.join(`post-${postId}`)
+  })
+  socket.on('join-user', (userEmail) => {
+    socket.join(`user-${userEmail}`)
+  })
+
+  socket.on('i-am-typing', async (postId, userEmail) => {
+    const { name: userName } = await prisma.user.findUnique({
+      where: {
+        email: userEmail
+      },
+      select: {
+        name: true
+      }
+    }) as { name: string }
+    socket.to(`post-${postId}`).except(`user-${userEmail}`).emit('is-typing', userEmail, userName)
+  })
+})
