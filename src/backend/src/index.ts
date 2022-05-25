@@ -124,7 +124,8 @@ app.post(`/login`, asyncErrorHandler( async (req, res) => {
       ...req.body
     },
     select: {
-      email: true
+      email: true, 
+      name: true
     }
   })
   res.json(user)

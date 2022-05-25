@@ -8,7 +8,7 @@ interface Props {
 }
 
 const AddComment: React.FC<Props> = (props) => {
-  const { user: authorEmail } = useAuthContext();
+  const { email: authorEmail } = useAuthContext();
 
   const [content, setContent] = useState<string>('')
 

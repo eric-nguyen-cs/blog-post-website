@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const TypingIndicator: React.FC<Props> = (props) => {
-  const { user: currentUser } = useAuthContext();
+  const { email: currentUser } = useAuthContext();
   const postSocket = useSocket(props.postId, currentUser)
 
   const IAmTypingEmiter = useSocketEmitter(postSocket, props.postId, currentUser)

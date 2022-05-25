@@ -5,7 +5,7 @@ import PrivateRoute from '../components/PrivateRoute'
 import { useAuthContext } from '../services/auth'
 
 const Draft: React.FC = () => {
-  const { user: authorEmail } = useAuthContext();
+  const { email: authorEmail } = useAuthContext();
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')

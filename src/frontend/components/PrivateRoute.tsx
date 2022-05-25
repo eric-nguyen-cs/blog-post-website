@@ -7,17 +7,17 @@ interface Props {
 }
 
 const PrivateRoute: React.FC<Props> = (props) => {
-  const { user } = useAuthContext()
+  const { email } = useAuthContext()
 
   useEffect(() => {
-    if (!user) {
+    if (!email) {
       Router.push("/login")
     }
-  }, [user])
+  }, [email])
 
   return(
     <>
-      {user ? (
+      {email ? (
         <>{props.children}</>
       ):
       (<></>)

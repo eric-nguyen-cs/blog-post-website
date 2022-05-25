@@ -8,40 +8,64 @@ const Header: React.FC = () => {
   const isActive: (pathname: string) => boolean =
     pathname => router.pathname === pathname
 
-  const { user } = useAuthContext()
+  const { email, name, logout } = useAuthContext()
+
+  const connectedMessage = ( email ? (`Connected as ${name}`) : ("\u00a0"))
 
   return(
     <nav>
-      <div className="left">
-        <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
-            Blog
-          </a>
-        </Link>
-        <Link href="/drafts">
-          <a data-active={isActive('/drafts')}>Drafts</a>
-        </Link>
-      </div>
-      <div className="right">
-        <Link href="/signup">
-          <a data-active={isActive('/signup')}>Signup</a>
-        </Link>
-        {user ? (
-            <Link href="/create">
-              <a data-active={isActive('/create')}>+ Create draft</a>
-            </Link>
-          ) : ( 
-            <Link href="/login">
-              <a data-active={isActive('/login')}>Login</a>
-            </Link>
-          )
-        }
+      <span className="logged-in-message">{connectedMessage}</span>
+      <div className="buttons-container">
+        <div className="left">
+          <Link href="/">
+            <a className="bold" data-active={isActive('/')}>
+              Blog
+            </a>
+          </Link>
+          <Link href="/drafts">
+            <a data-active={isActive('/drafts')}>Drafts</a>
+          </Link>
+        </div>
+        <div className="right">
+          <div>
+            {email ? (
+              <>
+                  <Link href="/create">
+                    <a data-active={isActive('/create')}>+ Create draft</a>
+                  </Link>
+                  <button onClick={logout}>Logout</button>
+                </>
+              ) : ( 
+                <>
+                  <Link href="/signup">
+                    <a data-active={isActive('/signup')}>Signup</a>
+                  </Link>
+                  <Link href="/login">
+                    <a data-active={isActive('/login')}>Login</a>
+                  </Link>
+                </>
+              )
+            }
+          </div>
+        </div>
       </div>
       <style jsx>{`
         nav {
           display: flex;
-          padding: 2rem;
+          flex-direction: column;
+          padding: 1.4rem 2rem 2rem 2rem;
+        }
+
+        .buttons-container {
+          display: flex;
           align-items: center;
+          justify-content: space-between; 
+        }
+
+        .logged-in-message {
+          font-weight: bold;
+          text-align: right;
+          margin: 0 0 0.5rem 0;
         }
 
         .bold {
@@ -54,19 +78,25 @@ const Header: React.FC = () => {
           display: inline-block;
         }
 
+        button {
+          font-size: inherit;
+        }
+        
         .left a[data-active='true'] {
           color: gray;
         }
 
-        a + a {
+        a + a, a + button {
           margin-left: 1rem;
         }
 
         .right {
-          margin-left: auto;
+          display: flex;
+          flex-direction: column;
+          align-content: center;
         }
 
-        .right a {
+        .right a, .right button{
           border: 1px solid black;
           padding: 0.5rem 1rem;
           border-radius: 3px;
